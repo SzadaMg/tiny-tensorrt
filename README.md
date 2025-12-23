@@ -28,9 +28,11 @@ net->CopyFromDeviceToHost(output, outputBindIndex)
 
 tiny-tensorrt rely on CUDA, CUDNN and TensorRT. Make sure you has installed those dependencies already. For a quick start, you can use [official docker](https://ngc.nvidia.com/catalog/containers/nvidia:tensorrt)
 
-Support CUDA version: 10.2, 11.0, 11.1, 11.2, 11.3, 11.4
+Support CUDA version: 10.2, 11.0, 11.1, 11.2, 11.3, 11.4, 11.6, 11.7, 11.8, 12.0+
 
-Support TensorRT version: 7.0, 7.1, 7.2, 8.0, 8.2 8.4
+Support TensorRT version: **8.0, 8.x, 9.x, 10.x** (fully compatible)
+
+> **Note:** This codebase has been refactored for full compatibility with TensorRT 8.0 through 10.x. See [TensorRT Version Compatibility Guide](docs/TensorRT-Version-Compatibility.md) for detailed information about version-specific features and API changes.
 
 To build tiny-tensorrt, you also need some extra packages.
 ```bash

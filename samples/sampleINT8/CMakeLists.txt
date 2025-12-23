@@ -6,7 +6,7 @@ target_compile_options(sampleINT8 PUBLIC -std=c++11 -Wall -Wno-deprecated -Wfloa
 target_link_libraries(sampleINT8 tinytrt)
 target_link_libraries(sampleINT8 ${LIBNVINFER})
 target_link_libraries(sampleINT8 ${LIBNVINFER_PLUGIN})
-target_link_libraries(sampleINT8 ${LIBNVPARSERS})
+# nvparsers removed in TensorRT 8.0+
 target_link_libraries(sampleINT8 ${LIBNVONNXPARSER})
 target_link_libraries(sampleINT8 ${ZLIB_LIBRARIES})
 install(TARGETS sampleINT8 DESTINATION ${CMAKE_INSTALL_BINDIR})

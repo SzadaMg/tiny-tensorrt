@@ -27,7 +27,7 @@ find_package(ZLIB REQUIRED)
 # TensorRT
 find_library(LIBNVINFER NAME nvinfer HINTS ${TENSORRT_LIB_PATH} REQUIRED)
 find_library(LIBNVINFER_PLUGIN NAME nvinfer_plugin HINTS ${TENSORRT_LIB_PATH} REQUIRED)
-find_library(LIBNVPARSERS NAME nvparsers HINTS ${TENSORRT_LIB_PATH} REQUIRED)
+# nvparsers was removed in TensorRT 8.0+ (Caffe/UFF parsers deprecated)
 find_library(LIBNVONNXPARSER NAME nvonnxparser HINTS ${TENSORRT_LIB_PATH} REQUIRED)
 
 find_path(TENSORRT_INCLUDE_DIR NvInfer.h
@@ -66,11 +66,11 @@ message(STATUS "
 =============> Final Config <===============
 TensorRT headers: ${TENSORRT_INCLUDE_DIR}
 TensorRT library: ${LIBNVINFER}
-Generated gencode flags: ${CUDA_gencode_flags} 
-BUILD_PYTHON : ${BUILD_PYTHON} 
-BUILD_SAMPLE : ${BUILD_SAMPLE} 
+Generated gencode flags: ${CUDA_gencode_flags}
+BUILD_PYTHON : ${BUILD_PYTHON}
+BUILD_SAMPLE : ${BUILD_SAMPLE}
 
-for -DGPU_ARCH, refer to 
+for -DGPU_ARCH, refer to
 https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
 ============================================
 ")
@@ -98,7 +98,7 @@ if(BUILD_PYTHON)
   target_link_libraries(pytrt PRIVATE tinytrt)
   target_link_libraries(pytrt PRIVATE ${LIBNVINFER})
   target_link_libraries(pytrt PRIVATE ${LIBNVINFER_PLUGIN})
-  target_link_libraries(pytrt PRIVATE ${LIBNVPARSERS})
+  # nvparsers removed - not needed for TensorRT 8.0+
   target_link_libraries(pytrt PRIVATE ${LIBNVONNXPARSER})
   target_link_libraries(pytrt PRIVATE ${ZLIB_LIBRARIES})
 endif()

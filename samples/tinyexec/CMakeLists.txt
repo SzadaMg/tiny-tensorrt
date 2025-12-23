@@ -6,7 +6,7 @@ target_compile_options(tinyexec PUBLIC -std=c++11 -Wall -Wno-deprecated -Wfloat-
 target_link_libraries(tinyexec tinytrt)
 target_link_libraries(tinyexec ${LIBNVINFER})
 target_link_libraries(tinyexec ${LIBNVINFER_PLUGIN})
-target_link_libraries(tinyexec ${LIBNVPARSERS})
+# nvparsers removed in TensorRT 8.0+
 target_link_libraries(tinyexec ${LIBNVONNXPARSER})
 target_link_libraries(tinyexec ${ZLIB_LIBRARIES})
 install(TARGETS tinyexec DESTINATION ${CMAKE_INSTALL_BINDIR})
