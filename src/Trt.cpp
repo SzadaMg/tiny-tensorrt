@@ -241,9 +241,8 @@ void Trt::AddDynamicShapeProfile(const std::string &inputName,
 void Trt::BuildEngine(const std::string &onnxModel,
                       const std::string &engineFile) {
   spdlog::info("build onnx engine from {}...", onnxModel);
-  TrtUniquePtr<nvinfer1::IRuntime> runtime{
-      nvinfer1::createInferRuntime(*mLogger)};
-  assert(runtime != nullptr && "create trt runtime failed");
+  mRuntime.reset(nvinfer1::createInferRuntime(*mLogger));
+  assert(mRuntime != nullptr && "create trt runtime failed");
   auto flag = 1U << static_cast<uint32_t>(
                   nvinfer1::NetworkDefinitionCreationFlag::kEXPLICIT_BATCH);
   TrtUniquePtr<nvinfer1::INetworkDefinition> network{
@@ -293,7 +292,7 @@ void Trt::BuildEngine(const std::string &onnxModel,
 #else
   TrtUniquePtr<nvinfer1::IHostMemory> plan{
       mBuilder->buildSerializedNetwork(*network, *mConfig)};
-  mEngine.reset(runtime->deserializeCudaEngine(plan->data(), plan->size()));
+  mEngine.reset(mRuntime->deserializeCudaEngine(plan->data(), plan->size()));
 #endif
   assert(mEngine != nullptr && "build trt engine failed");
   SaveEngine(engineFile, plan);
@@ -314,13 +313,15 @@ bool Trt::DeserializeEngine(const std::string &engineFile, int dlaCore) {
     in.seekg(start_pos);
     std::unique_ptr<char[]> engineBuf(new char[bufCount]);
     in.read(engineBuf.get(), bufCount);
-    TrtUniquePtr<nvinfer1::IRuntime> runtime{
-        nvinfer1::createInferRuntime(*mLogger)};
+
+    mRuntime.reset(nvinfer1::createInferRuntime(*mLogger));
     if (dlaCore >= 0) {
-      runtime->setDLACore(dlaCore);
+      mRuntime->setDLACore(dlaCore);
     }
-    mEngine.reset(
-        runtime->deserializeCudaEngine((void *)engineBuf.get(), bufCount));
+
+    mEngine = TrtUniquePtr<nvinfer1::ICudaEngine>(
+        mRuntime->deserializeCudaEngine((void *)engineBuf.get(), bufCount));
+
     assert(mEngine != nullptr);
     mContext.reset(mEngine->createExecutionContext());
     assert(mContext != nullptr);

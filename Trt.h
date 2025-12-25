@@ -244,6 +244,8 @@ protected:
 
   TrtUniquePtr<nvinfer1::ICudaEngine> mEngine{nullptr};
 
+  TrtUniquePtr<nvinfer1::IRuntime> mRuntime{nullptr};
+
   TrtUniquePtr<nvinfer1::IExecutionContext> mContext{nullptr};
 
   nvinfer1::IOptimizationProfile *mProfile = nullptr;
